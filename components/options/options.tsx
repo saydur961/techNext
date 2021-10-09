@@ -1,5 +1,5 @@
 // module
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 // comp
 import { MainMenu } from './mainMenu';
 import { SearchMenu } from './searchMenu';
@@ -7,8 +7,10 @@ import { FilterMenu } from './filterMenu';
 import { SortMenu } from './sortMenu';
 // material 
 import { Grid } from '@material-ui/core';
+// utils
+import { getDate } from '../../utils/getDate';
 
-const BASE_API_URL = 'test.com';
+const BASE_API_URL = 'https://api.spacexdata.com/v3/launches';
 
 // ================== define types of state property ==================
 export enum StateProperty {
@@ -108,7 +110,7 @@ const initialState: TState = {
   rocketName: { hasValue: false, value: '' },
   launchDateFilter: { hasValue: false, value: 'Any Time' },
   launchStatusFilter: { hasValue: false, value: 'Any' },
-  launchDateSort: { hasValue: false, isEnabled: false, value: 'Newest' }
+  launchDateSort: { hasValue: true, isEnabled: false, value: 'Newest' }
 }
 
 export const Options = () => {
@@ -116,6 +118,70 @@ export const Options = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   console.log(state);
+
+  useEffect(() => {
+
+    let url = `${BASE_API_URL}?limit=10`;
+
+    // check mainOption
+    if(state.mainOption.hasValue) {
+      switch(state.mainOption.value) {
+        case 'All':
+          url = url;
+          break;
+        case 'Recent':
+          url = `${url}&sort=launch_date_utc&order=desc`;
+          break;
+        case 'Upcoming':
+          url = `${BASE_API_URL}/upcoming?limit=10`;
+          break;
+      }
+    }
+
+    // check rocketName
+    if(state.rocketName.hasValue) {
+      const rcktName = state.rocketName.value.split(' ').join('+')
+      url = `${url}&rocket_name=${rcktName}`
+    }
+
+    // check launchDateFilter
+    if(state.launchDateFilter.hasValue) {
+      let endDate: string|null = null;
+      switch(state.launchDateFilter.value) {
+        case 'Last Week':
+          endDate = getDate('prev_week');
+          break;
+        case 'Last Month':
+          endDate = getDate('prev_month');
+          break;
+        case 'Last Year':
+          endDate = getDate('prev_year');
+          break;
+      }
+      if(endDate) {
+        console.log(endDate);
+        // with start it not working
+        // url = `${url}&start=${getDate('current')}&end=${endDate}` 
+        url = `${url}&end=${endDate}`
+      }
+    }
+
+    // check launchStatusFilter
+    if(state.launchStatusFilter.hasValue) {
+      const isSuccess = state.launchStatusFilter.value === 'Success';
+      url = `${url}&launch_success=${isSuccess}`;
+    }
+
+    // check launchDateSort
+    if(state.launchDateSort.isEnabled && state.launchDateSort.hasValue) {
+      const sortType = state.launchDateSort.value === 'Newest' ? 'desc': 'asc';
+      url = `${url}&sort=launch_date_utc&order=${sortType}`;
+    }
+
+    console.log(url)
+
+
+  }, [state])
 
   return (
     <Grid item xs={12} container >
