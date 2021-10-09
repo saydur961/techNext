@@ -10,6 +10,7 @@ import { RocketList } from '../components/rocket/rocketList/rocketList';
 // material
 import { Grid } from '@material-ui/core';
 import { GridWrapper } from '../components/layout/gridWrapper';
+import { Progress } from '../components/shared/progress/progress';
 
 export const LIMIT_DOC = 10;
 
@@ -36,7 +37,11 @@ export default function Home() {
         <Options handleUrl={handleUrl} />
       </Grid>
 
-      <RocketList list={launchList.list} />
+      {
+        launchList.status === 'loading' ?
+          <Progress /> :
+          <RocketList list={launchList.list} />
+      }
 
     </GridWrapper>
   )

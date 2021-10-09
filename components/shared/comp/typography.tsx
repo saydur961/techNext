@@ -74,7 +74,8 @@ export const TypoPara: FC<ITypoPara> = ({ txt, size, align, margin, color, varia
   if (!variant || variant === 'p') {
 
     return (
-      <Typography variant="body2" component="p" align={al}
+      <Typography variant="body2" component="p" align={al} 
+        color={isInherit ? 'textSecondary': 'textPrimary'}
         noWrap={isWrap} style={additionalStyle}
         className={classes.root}
       >
@@ -92,19 +93,4 @@ export const TypoPara: FC<ITypoPara> = ({ txt, size, align, margin, color, varia
     </Typography>
   )
 
-}
-
-interface IEmptyDataTypo {
-  txt: string | number;
-}
-
-export const EmptyDataTypo: FC<IEmptyDataTypo> = ({ txt }) => {
-  return (
-    <Grid item xs={12} container alignItems="center" justifyContent="center"
-      style={{ height: '50vh' }} >
-      <Typography variant="h2" align="center" >
-        {txt}
-      </Typography>
-    </Grid>
-  )
 }
