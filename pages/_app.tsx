@@ -1,6 +1,8 @@
 //===================== module
 import React from 'react';
-import type { AppProps } from 'next/app'
+import { Provider } from 'react-redux';
+import type { AppProps } from 'next/app';
+import { store } from '../redux/store';
 // ======== comp
 import PropTypes from 'prop-types';
 import Head from 'next/head';
@@ -24,14 +26,17 @@ export default function MyApp(props: AppProps) {
         <title>My page</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
-        <Layout>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...pageProps} />
-        </Layout>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Layout>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...pageProps} />
+          </Layout>
 
-      </ThemeProvider>
+        </ThemeProvider>
+      </Provider>
+
     </React.Fragment>
   );
 }

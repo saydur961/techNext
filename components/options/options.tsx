@@ -1,5 +1,5 @@
 // module
-import { useReducer, useEffect } from 'react';
+import { useReducer, useEffect, FC, Dispatch, SetStateAction } from 'react';
 // comp
 import { MainMenu } from './mainMenu';
 import { SearchMenu } from './searchMenu';
@@ -9,6 +9,7 @@ import { SortMenu } from './sortMenu';
 import { Grid } from '@material-ui/core';
 // utils
 import { getDate } from '../../utils/getDate';
+import { LIMIT_DOC } from '../../pages/index';
 
 const BASE_API_URL = 'https://api.spacexdata.com/v3/launches';
 
@@ -113,15 +114,20 @@ const initialState: TState = {
   launchDateSort: { hasValue: true, isEnabled: false, value: 'Newest' }
 }
 
-export const Options = () => {
+interface IComp {
+  // setUrl: Dispatch<SetStateAction<string>> 
+  handleUrl: (newUrl: string) => void
+}
+
+export const Options: FC<IComp> = ({ handleUrl }) => {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  console.log(state);
+  // console.log(state);
 
   useEffect(() => {
 
-    let url = `${BASE_API_URL}?limit=10`;
+    let url = `${BASE_API_URL}?limit=${LIMIT_DOC}`;
 
     // check mainOption
     if(state.mainOption.hasValue) {
@@ -133,7 +139,7 @@ export const Options = () => {
           url = `${url}&sort=launch_date_utc&order=desc`;
           break;
         case 'Upcoming':
-          url = `${BASE_API_URL}/upcoming?limit=10`;
+          url = `${BASE_API_URL}/upcoming?limit=${LIMIT_DOC}`;
           break;
       }
     }
@@ -178,9 +184,8 @@ export const Options = () => {
       url = `${url}&sort=launch_date_utc&order=${sortType}`;
     }
 
-    console.log(url)
-
-
+    handleUrl(url);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
   return (
