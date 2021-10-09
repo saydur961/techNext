@@ -1,5 +1,5 @@
 // module
-import { useState, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef, UIEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // redux
 import { RootState } from '../redux/store';
@@ -17,15 +17,39 @@ export const LIMIT_DOC = 10;
 export default function Home() {
 
   const [currentPage, setCurrentPage] = useState(1);
-  // const [url, setUrl] = useState<string|null>(null);
+  const observer = useRef<null|IntersectionObserver>(null);
   const url = useRef<string|null>(null);
   const launchList = useSelector((state: RootState) => state.launchList);
   const dispatch = useDispatch();
+  
+  const lastSectionRef = useCallback(node => {
 
-  console.log(launchList);
+    if(launchList.status !== 'success') return;
+
+    if(observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver( entries => {
+      if(entries[0].isIntersecting && launchList.lastDocLen === LIMIT_DOC &&
+        url.current
+      ) {
+        
+        const offset = currentPage * LIMIT_DOC;
+        const newUrl = `${url.current}&offset=${offset}`;
+        dispatch(fetchLaunchList(newUrl));
+        setCurrentPage(prev => prev+1);
+      }
+    });
+
+    if(node) {
+      observer.current.observe(node);
+    }
+
+
+  }, [launchList.status, launchList.lastDocLen, dispatch, currentPage]);
+
+  // console.log(launchList);
 
   const handleUrl = (newUrl: string) => {
-    console.log(newUrl);
     url.current = newUrl;
     dispatch(clearList());
     dispatch(fetchLaunchList(newUrl))
@@ -33,14 +57,17 @@ export default function Home() {
 
   return (
     <GridWrapper>
-      <Grid item xs={12} >
+      <Grid item xs={12}>
         <Options handleUrl={handleUrl} />
       </Grid>
 
+      <RocketList list={launchList.list} />
+      <div style={{transform: 'translateY(-3rem)'}} ref={lastSectionRef} > </div>
+      
+
       {
-        launchList.status === 'loading' ?
-          <Progress /> :
-          <RocketList list={launchList.list} />
+        launchList.status === 'loading' &&
+          <Progress size="8rem" height={20} />
       }
 
     </GridWrapper>

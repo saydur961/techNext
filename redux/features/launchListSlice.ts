@@ -7,13 +7,15 @@ import { fetchApi } from '../../utils/fetch';
 export interface launchState {
   status: 'success'| 'loading'| 'fail';
   list: ILaunch[];
+  lastDocLen: number;
   // currentPage: number;
 }
 
 const initialState: launchState = {
   status: 'loading',
   list: [],
-  // currentPage: 1
+  lastDocLen: 0,
+  // currentPage: 0
 }
 
 export const fetchLaunchList = createAsyncThunk(
@@ -42,9 +44,12 @@ export const launchSlice = createSlice({
     .addCase(fetchLaunchList.fulfilled, (state, action) => {
       const newData: ILaunch[] = action.payload;
       state.status = 'success';
+     
       // console.log(action);
       // state.list = [...state.list, ...newData];
-      state.list = [...newData];
+      // state.list = [...newData];
+      state.list.push(...newData);
+      state.lastDocLen = newData.length;
     })
     .addCase(fetchLaunchList.rejected, (state, action) => {
       state.status = 'fail';
@@ -53,10 +58,11 @@ export const launchSlice = createSlice({
   reducers: {
     clearList: (state) => {
       state.list = [];
+      state.lastDocLen = 0;
+      state.status = 'loading';
     }
   }
 });
-
 export const { clearList } = launchSlice.actions;
 
 export const launchListReducer = launchSlice.reducer;

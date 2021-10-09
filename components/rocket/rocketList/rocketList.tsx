@@ -1,5 +1,5 @@
 // module
-import { FC } from 'react';
+import { FC, UIEvent } from 'react';
 // comp
 import { RocketItem } from '../rocketItem/rocketItem';
 import { TypoPara } from '../../shared/comp/typography';
@@ -9,13 +9,13 @@ import { Grid } from '@material-ui/core';
 import { ILaunch } from '../../../types/launch';
 
 interface IComp {
-  list: ILaunch[]
+  list: ILaunch[];
 }
 
 export const RocketList: FC<IComp> = ({ list }) => {
 
   return (
-    <Grid item xs={12} container justifyContent="center" style={{paddingTop: '3rem'}} >
+    <Grid item xs={12} container justifyContent="center" style={{paddingTop: '3rem'}}>
       {
         list.map(el => (
           <Grid item xs={12} key={`${el.flight_number}_${el.mission_id}`}>
