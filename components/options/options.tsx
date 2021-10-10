@@ -165,10 +165,8 @@ export const Options: FC<IComp> = ({ handleUrl }) => {
           break;
       }
       if(endDate) {
-        console.log(endDate);
-        // with start it not working
-        // url = `${url}&start=${getDate('current')}&end=${endDate}` 
-        url = `${url}&end=${endDate}`
+        url = `${url}&end=${getDate('current')}&start=${endDate}` 
+        // url = `${url}&end=${endDate}`
       }
     }
 

@@ -39,7 +39,8 @@ export const SortMenu: FC<IComp> = ({ state, dispatch }) => {
 
   const dateHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as launchDateSortType;
-    dispatch({ type: 'launchDateSort', payload: value })
+    dispatch({ type: 'launchDateSort', payload: value });
+    handleClose();
   };
 
 

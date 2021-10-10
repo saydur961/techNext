@@ -40,12 +40,14 @@ export const FilterMenu : FC<IComp> = ({ state, dispatch }) => {
 
   const dateHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as launchDateType;
-    dispatch({ type: 'launchDateFilter', payload: value })
+    dispatch({ type: 'launchDateFilter', payload: value });
+    handleClose();
   };
 
   const statusHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value as launchStatusType;
-    dispatch({ type: 'launchStatusFilter', payload: value })
+    dispatch({ type: 'launchStatusFilter', payload: value });
+    handleClose();
   };
 
 

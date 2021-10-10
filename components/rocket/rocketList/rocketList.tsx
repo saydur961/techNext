@@ -1,8 +1,7 @@
 // module
-import { FC, UIEvent } from 'react';
+import { FC } from 'react';
 // comp
 import { RocketItem } from '../rocketItem/rocketItem';
-import { TypoPara } from '../../shared/comp/typography';
 // materail
 import { Grid } from '@material-ui/core';
 // types
