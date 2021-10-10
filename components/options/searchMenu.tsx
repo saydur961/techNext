@@ -1,5 +1,5 @@
 // comp
-import { FC, Dispatch, ChangeEvent } from 'react';
+import { useState, useEffect, FC, Dispatch } from 'react';
 import { TState, TAction } from './options';
 // material
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -24,16 +24,25 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const SearchMenu: FC<IComp> = ({ state, dispatch }) => {
 
+  const [txt, setTxt] = useState('');
   const classes = useStyles();
 
-  const changeHandler = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    dispatch({type: 'rocketName', payload: e.target.value})
-  }
+  useEffect(() => {
+    const delaying = setTimeout(() => {
+      dispatch({type: 'rocketName', payload: txt});
+    }, 1000)
+
+    return () => clearTimeout(delaying)
+  }, [txt, dispatch])
+
+  // const changeHandler = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  //   dispatch({type: 'rocketName', payload: e.target.value});
+  // }
 
   return (
     <div className={classes.root}>
       <TextField id="standard-basic" label="Rocket Name" fullWidth={true}
-        value={state.rocketName.value} onChange={changeHandler}
+        value={txt} onChange={e=> setTxt(e.target.value)}
       />
     </div>
   )

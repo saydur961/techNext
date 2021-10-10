@@ -183,6 +183,7 @@ export const Options: FC<IComp> = ({ handleUrl }) => {
     }
 
     handleUrl(url);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state])
 
