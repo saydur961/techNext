@@ -51,7 +51,6 @@ export default function Home() {
   // console.log(launchList);
 
   const handleUrl = (newUrl: string) => {
-    console.log(newUrl);
     url.current = newUrl;
     dispatch(clearList());
     dispatch(fetchLaunchList(newUrl))
